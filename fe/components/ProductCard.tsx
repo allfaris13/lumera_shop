@@ -20,31 +20,55 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   return (
     <motion.div
-      whileTap={{ scale: 0.96 }} // efek kecil saat ditekan
-      onClick={() => router.push(`/product/${product.id}`)} // ✅ navigasi ke detail
-      className="bg-white rounded-2xl shadow-sm p-3 flex flex-col items-center cursor-pointer hover:shadow-md transition"
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+      onClick={() => router.push(`/product/${product.id}`)}
+      className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden cursor-pointer hover:shadow-md transition-all duration-200"
     >
-      <div className="relative w-[120px] h-[120px]">
+      {/* Image Container */}
+      <div className="relative w-full aspect-square bg-gray-50">
         <Image
           src={product.image}
           alt={product.name}
           fill
-          className="rounded-lg object-cover"
+          className="object-cover"
         />
+        
+        {/* Heart Icon */}
+        <button 
+          className="absolute top-2 right-2 p-1.5 bg-white/80 backdrop-blur-sm rounded-full hover:bg-white transition-colors"
+          onClick={(e) => {
+            e.stopPropagation();
+            // Add to favorites logic here
+          }}
+        >
+          <Heart className="w-4 h-4 text-gray-600 hover:text-red-500 transition-colors" />
+        </button>
       </div>
 
-      <h3 className="text-sm font-semibold mt-2 text-center">
-        {product.name}
-      </h3>
-      <p className="text-xs text-gray-500 text-center line-clamp-2">
-        {product.desc}
-      </p>
+      {/* Content */}
+      <div className="p-3">
+        {/* Product Name */}
+        <h3 className="text-sm font-medium text-gray-900 line-clamp-2 mb-1 leading-tight">
+          {product.name}
+        </h3>
+        
+        {/* Description */}
+        <p className="text-xs text-gray-500 line-clamp-1 mb-2">
+          {product.desc}
+        </p>
 
-      <div className="flex items-center justify-between w-full mt-2 text-sm px-1">
-        <span className="flex items-center gap-1 text-yellow-500">
-          ⭐ {product.rating}
-        </span>
-        <Heart className="w-4 h-4 text-[#5a413b]" />
+        {/* Price and Rating */}
+        <div className="flex items-center justify-between">
+          <span className="text-[#FF6B35] font-bold text-sm">
+            Rp {product.price.toLocaleString()}
+          </span>
+          
+          <div className="flex items-center gap-1">
+            <span className="text-yellow-400 text-xs">⭐</span>
+            <span className="text-xs text-gray-500">{product.rating}</span>
+          </div>
+        </div>
       </div>
     </motion.div>
   );

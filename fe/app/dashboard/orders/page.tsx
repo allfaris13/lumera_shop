@@ -10,7 +10,12 @@ import {
   CheckCircle,
   XCircle,
   CreditCard,
+  Eye,
+  X,
+  Calendar,
+  Receipt,
 } from "lucide-react";
+import BottomNav from "@/components/BottomNav";
 
 interface OrderItem {
   id: number;
@@ -39,6 +44,8 @@ export default function OrderHistoryPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     fetchOrders();
@@ -52,7 +59,7 @@ export default function OrderHistoryPage() {
         return;
       }
 
-      const response = await fetch("/api/orders", {
+      const response = await fetch("http://localhost:5000/api/orders", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -97,6 +104,28 @@ export default function OrderHistoryPage() {
     }
   };
 
+  const openOrderDetails = (order: Order) => {
+    setSelectedOrder(order);
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    setSelectedOrder(null);
+  };
+
+  const calculateSubtotal = (order: Order) => {
+    return order.items.reduce((sum, item) => sum + item.subtotal, 0);
+  };
+
+  const calculateTax = (subtotal: number) => {
+    return subtotal * 0.1; // 10% tax
+  };
+
+  const calculateDeliveryFee = () => {
+    return 5000; // Fixed delivery fee
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -125,7 +154,7 @@ export default function OrderHistoryPage() {
       </div>
 
       {/* Content */}
-      <div className="p-6">
+      <div className="p-6 pb-24">
         {orders.length === 0 ? (
           <div className="text-center py-12">
             <Package size={48} className="text-gray-300 mx-auto mb-4" />
@@ -215,20 +244,177 @@ export default function OrderHistoryPage() {
                   ))}
                 </div>
 
-                {/* Total */}
+                {/* Total and View Details */}
                 <div className="border-t border-gray-200 pt-3">
-                  <div className="flex justify-between items-center">
+                  <div className="flex justify-between items-center mb-3">
                     <span className="font-semibold text-gray-800">Total</span>
                     <span className="font-bold text-lg text-[#5B2D24]">
                       Rp {order.totalAmount.toLocaleString("id-ID")}
                     </span>
                   </div>
+                  
+                  {/* View Details Button */}
+                  <button
+                    onClick={() => openOrderDetails(order)}
+                    className="w-full bg-[#7B4540] text-white py-2 px-4 rounded-lg flex items-center justify-center gap-2 hover:bg-[#5B2D24] transition-colors"
+                  >
+                    <Eye size={16} />
+                    View Details
+                  </button>
                 </div>
               </div>
             ))}
           </div>
         )}
       </div>
+
+      {/* Bottom Navigation */}
+      <BottomNav />
+
+      {/* Order Details Modal */}
+      {showModal && selectedOrder && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+            {/* Modal Header */}
+            <div className="sticky top-0 bg-white border-b border-gray-200 p-4 rounded-t-2xl">
+              <div className="flex items-center justify-between">
+                <h2 className="text-lg font-bold text-gray-800">Order Details</h2>
+                <button
+                  onClick={closeModal}
+                  className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                >
+                  <X size={20} className="text-gray-500" />
+                </button>
+              </div>
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-4 space-y-6">
+              {/* Order Info */}
+              <div className="bg-gray-50 rounded-xl p-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <Receipt size={20} className="text-[#7B4540]" />
+                  <h3 className="font-semibold text-gray-800">Order Information</h3>
+                </div>
+                
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Order ID:</span>
+                    <span className="font-medium">#{selectedOrder.id}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Date:</span>
+                    <span className="font-medium">
+                      {new Date(selectedOrder.orderDate).toLocaleDateString("id-ID", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Status:</span>
+                    <div className="flex items-center gap-2">
+                      {getStatusIcon(selectedOrder.paymentStatus)}
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(selectedOrder.paymentStatus)}`}>
+                        {selectedOrder.paymentStatus}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Order Items */}
+              <div>
+                <h3 className="font-semibold text-gray-800 mb-3">Order Items</h3>
+                <div className="space-y-3">
+                  {selectedOrder.items.map((item) => (
+                    <div key={item.id} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                      <div className="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center">
+                        {item.product.imageUrl ? (
+                          <Image
+                            src={item.product.imageUrl}
+                            alt={item.product.name}
+                            width={48}
+                            height={48}
+                            className="rounded-lg object-cover"
+                          />
+                        ) : (
+                          <Package size={20} className="text-gray-400" />
+                        )}
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-medium text-sm text-gray-800">{item.product.name}</p>
+                        <p className="text-xs text-gray-500">
+                          Qty: {item.quantity} × Rp {(item.subtotal / item.quantity).toLocaleString("id-ID")}
+                        </p>
+                      </div>
+                      <p className="font-semibold text-sm text-gray-800">
+                        Rp {item.subtotal.toLocaleString("id-ID")}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Price Breakdown */}
+              <div>
+                <h3 className="font-semibold text-gray-800 mb-3">Price Breakdown</h3>
+                <div className="bg-gray-50 rounded-xl p-4 space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Subtotal:</span>
+                    <span className="font-medium">Rp {calculateSubtotal(selectedOrder).toLocaleString("id-ID")}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Tax (10%):</span>
+                    <span className="font-medium">Rp {calculateTax(calculateSubtotal(selectedOrder)).toLocaleString("id-ID")}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Delivery Fee:</span>
+                    <span className="font-medium">Rp {calculateDeliveryFee().toLocaleString("id-ID")}</span>
+                  </div>
+                  <div className="border-t border-gray-300 pt-2 mt-2">
+                    <div className="flex justify-between">
+                      <span className="font-semibold text-gray-800">Total Amount:</span>
+                      <span className="font-bold text-lg text-[#7B4540]">
+                        Rp {selectedOrder.totalAmount.toLocaleString("id-ID")}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Payment Method */}
+              <div>
+                <h3 className="font-semibold text-gray-800 mb-3">Payment Information</h3>
+                <div className="bg-gray-50 rounded-xl p-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-[#7B4540] rounded-lg flex items-center justify-center">
+                      <CreditCard size={20} className="text-white" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-800">{selectedOrder.paymentMethod}</p>
+                      <p className="text-sm text-gray-500">
+                        Payment Status: <span className="font-medium">{selectedOrder.paymentStatus}</span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Close Button */}
+              <button
+                onClick={closeModal}
+                className="w-full bg-[#7B4540] text-white py-3 px-4 rounded-xl font-medium hover:bg-[#5B2D24] transition-colors"
+              >
+                Close Details
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

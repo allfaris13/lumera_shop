@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
 import Footer from "@/components/Footer";
+import WhatsAppFloat from "@/components/WhatsAppFloat";
 
 export default function HomePage() {
   const router = useRouter();
@@ -64,11 +65,19 @@ export default function HomePage() {
     { label: "Savory", value: "Makanan Asin" },
   ];
 
-  // Fetch products from API (TIDAK BERUBAH)
+  // Fetch products from API
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("/api/products");
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second timeout
+        
+        const response = await fetch("http://localhost:5000/api/products", {
+          signal: controller.signal
+        });
+        
+        clearTimeout(timeoutId);
+        
         if (!response.ok) {
           throw new Error("Failed to fetch products");
         }
@@ -115,7 +124,7 @@ export default function HomePage() {
   useEffect(() => {
     const fetchUserData = async (token: string) => {
       try {
-        const response = await fetch("/api/profile", {
+        const response = await fetch("http://localhost:5000/api/users/profile", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -338,59 +347,123 @@ export default function HomePage() {
         </div>
       </motion.div>
 
-      {/* Hero Section with Search */}
+      {/* Hero Section - Modern Layout */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="pt-24 sm:pt-32 pb-8 bg-linear-to-b from-white to-[#FAF7F2]"
+        className="pt-24 sm:pt-32 pb-12 bg-gradient-to-br from-white via-[#FAF7F2] to-[#F5F1E8]"
       >
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Welcome Message */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="text-center space-y-4"
-          >
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#2b1d1a]">
-              {isLoggedIn ? (
-                <>
-                  Welcome back,{" "}
-                  <span className="text-[#7B4540]">{user.name}</span>!
-                </>
-              ) : (
-                <>Discover Your Favorite Food</>
-              )}
-            </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto text-sm sm:text-base">
-              {isLoggedIn
-                ? "Continue exploring our delicious menu and find your next favorite meal."
-                : "Experience a wide variety of delicious meals, carefully crafted just for you."}
-            </p>
-          </motion.div>
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left Content */}
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.2 }}
+              className="space-y-8"
+            >
+              {/* Main Heading */}
+              <div className="space-y-4">
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[#2b1d1a] leading-tight">
+                  Continue Learning
+                  <br />
+                  <span className="text-[#7B4540]">and Unleash your</span>
+                  <br />
+                  <span className="text-[#2b1d1a]">Brain's Potential.</span>
+                </h1>
+                <p className="text-lg text-gray-600 max-w-lg">
+                  {isLoggedIn 
+                    ? `Welcome back, ${user.name}! Continue exploring our delicious menu and find your next favorite meal.`
+                    : "Improve your skills and knowledge for better career and future with our delicious food selection."
+                  }
+                </p>
+              </div>
 
-          {/* Search Bar */}
-          <motion.div
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.4 }}
-            className="mt-8 sm:mt-12 max-w-2xl mx-auto"
-          >
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search your favorite food..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-4 rounded-2xl bg-white shadow-xl shadow-[#7B4540]/5 border border-[#E8DCC4]/30 focus:outline-none focus:ring-2 focus:ring-[#7B4540]/20 transition-all text-[#2b1d1a]"
-              />
-            </div>
-          </motion.div>
+              {/* Stats */}
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.6 }}
+                className="flex gap-8 pt-4"
+              >
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-[#2b1d1a]">230</div>
+                  <div className="text-sm text-gray-500">Mentors</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-[#2b1d1a]">3K+</div>
+                  <div className="text-sm text-gray-500">Video Courses</div>
+                </div>
+              </motion.div>
+            </motion.div>
+
+            {/* Right Content - Hero Image */}
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3 }}
+              className="relative"
+            >
+              {/* Main Hero Card */}
+              <div className="relative bg-white rounded-3xl p-8 shadow-2xl">
+                {/* Online Courses Badge */}
+                <div className="absolute -top-4 -right-4 bg-white rounded-full px-4 py-2 shadow-lg border border-red-100">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                      2k
+                    </div>
+                    <span className="text-sm font-medium text-gray-600">Online Courses</span>
+                  </div>
+                </div>
+
+                {/* Hero Image */}
+                <div className="relative">
+                  <div className="w-full h-80 bg-gradient-to-br from-blue-100 to-blue-200 rounded-2xl overflow-hidden">
+                    <Image
+                      src="/images/burgers/burger.png"
+                      alt="Delicious Food"
+                      width={400}
+                      height={320}
+                      className="w-full h-full object-contain p-8"
+                    />
+                  </div>
+                  
+                  {/* Floating Elements */}
+                  <div className="absolute -bottom-4 -left-4 bg-white rounded-2xl p-4 shadow-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
+                        <span className="text-2xl">🏆</span>
+                      </div>
+                      <div>
+                        <div className="font-semibold text-gray-800">230</div>
+                        <div className="text-xs text-gray-500">Mentors</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="absolute -top-4 -left-8 bg-white rounded-2xl p-4 shadow-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                        <span className="text-2xl">📹</span>
+                      </div>
+                      <div>
+                        <div className="font-semibold text-gray-800">3K+</div>
+                        <div className="text-xs text-gray-500">Video Courses</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Background Decorations */}
+              <div className="absolute -z-10 top-8 right-8 w-32 h-32 bg-blue-100 rounded-full opacity-50"></div>
+              <div className="absolute -z-10 bottom-8 left-8 w-24 h-24 bg-yellow-100 rounded-full opacity-50"></div>
+            </motion.div>
+          </div>
         </div>
       </motion.div>
 
-      {/* Hero Section */}
+      {/* Categories and Products Section */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -407,7 +480,7 @@ export default function HomePage() {
           >
           </motion.div>
 
-          {/* Categories */}
+          {/* Categories with Search */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -418,18 +491,25 @@ export default function HomePage() {
               <h3 className="text-lg sm:text-xl font-bold text-[#2b1d1a]">
                 Categories
               </h3>
-              <button
-                onClick={() => {
-                  setSelectedCategory("All");
-                  // scroll to product grid
-                  const el = document.getElementById("product-grid");
-                  if (el)
-                    el.scrollIntoView({ behavior: "smooth", block: "start" });
-                }}
-                className="text-[#7B4540] hover:text-[#2b1d1a] text-sm font-medium transition-colors"
+              
+              {/* Search Bar Capsul */}
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.8 }}
+                className="flex-1 max-w-md ml-4 sm:ml-6"
               >
-                See All
-              </button>
+                <div className="relative">
+                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="Search your favorite food..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full pl-10 pr-4 py-3 rounded-full bg-white shadow-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#7B4540]/20 transition-all text-[#2b1d1a] text-sm"
+                  />
+                </div>
+              </motion.div>
             </div>
             <div className="flex gap-3 overflow-x-auto pb-4 px-4 no-scrollbar">
               {categories.map((cat, index) => (
@@ -471,8 +551,8 @@ export default function HomePage() {
                   key={product.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.9 + index * 0.1 }}
-                  whileHover={{ y: -4 }}
+                  transition={{ delay: index * 0.02 }} // Reduced delay significantly
+                  whileHover={{ y: -2 }} // Reduced hover effect
                   className="group relative bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300"
                 >
                   {/* Favorite Button */}
@@ -572,15 +652,11 @@ export default function HomePage() {
 
       <Footer />
 
+      {/* WhatsApp Floating Button */}
+      <WhatsAppFloat />
+
       {/* Bottom Navigation */}
-      <motion.div
-        initial={{ y: 100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5, delay: 2 }}
-        className="fixed bottom-0 left-0 right-0 z-50 pb-2"
-      >
-        <BottomNav />
-      </motion.div>
+      <BottomNav />
     </motion.div>
   );
 }

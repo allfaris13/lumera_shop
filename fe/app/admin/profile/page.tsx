@@ -91,7 +91,7 @@ export default function AdminProfilePage() {
         return;
       }
 
-      const response = await fetch("/api/admin/profile", {
+      const response = await fetch("http://localhost:5000/api/admin/profile", {
         credentials: "include",
         headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       });
@@ -226,7 +226,7 @@ export default function AdminProfilePage() {
     setUpdating(true);
     try {
       const token = localStorage.getItem("adminToken");
-      const response = await fetch("/api/admin/profile", {
+      const response = await fetch("http://localhost:5000/api/admin/profile", {
         method: "PUT",
         credentials: "include",
         headers: {

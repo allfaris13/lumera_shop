@@ -52,7 +52,7 @@ export default function ProductDetail() {
   // Function to fetch product reviews
   const fetchProductReviews = useCallback(async () => {
     try {
-      const response = await fetch(`/api/products/${id}/reviews`);
+      const response = await fetch(`http://localhost:5000/api/products/${id}/reviews`);
       if (!response.ok) {
         const errBody = await response.json().catch(() => null);
         throw new Error(errBody?.message || "Failed to fetch reviews");
@@ -68,7 +68,7 @@ export default function ProductDetail() {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await fetch(`/api/products/${id}`);
+        const response = await fetch(`http://localhost:5000/api/products/${id}`);
         if (!response.ok) {
           // try to use backend message if provided
           let errBody = null;
@@ -159,7 +159,7 @@ export default function ProductDetail() {
     setSubmittingRating(true);
     setRatingMessage(null);
     try {
-      const resp = await fetch(`/api/products/${id}/rate`, {
+      const resp = await fetch(`http://localhost:5000/api/products/${id}/rate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

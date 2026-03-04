@@ -2,7 +2,6 @@
 
 // --- Datasource & Generator ---
 datasource db {
-  // Pastikan provider ini adalah 'postgresql'
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }

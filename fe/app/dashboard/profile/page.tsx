@@ -13,6 +13,7 @@ import {
   CheckCircle,
   AlertCircle,
 } from "lucide-react";
+import BottomNav from "@/components/BottomNav";
 
 export default function UserProfilePage() {
   const router = useRouter();
@@ -44,7 +45,7 @@ export default function UserProfilePage() {
         return;
       }
 
-      const response = await fetch("/api/profile", {
+      const response = await fetch("http://localhost:5000/api/users/profile", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -110,7 +111,7 @@ export default function UserProfilePage() {
 
       console.log("Sending request to /api/profile");
 
-      const response = await fetch("/api/profile", {
+      const response = await fetch("http://localhost:5000/api/users/profile", {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -295,31 +296,31 @@ export default function UserProfilePage() {
             />
           </div>
         </div>
-      </div>
 
-      {/* garis pemisah */}
-      <div className="w-[88%] border-t border-gray-200 mt-6" />
-
-      {/* menu tambahan */}
-      <div className="w-[88%] mt-4 space-y-2 text-sm text-gray-700 font-medium">
-        <div
-          className="flex justify-between items-center py-2 cursor-pointer hover:text-[#5B2D24]"
-          onClick={() => router.push("/dashboard/orders")}
-        >
-          <span>Order History</span>
-          <ChevronRight size={16} />
-        </div>
-        <div
-          className="flex justify-between items-center py-2 cursor-pointer hover:text-[#5B2D24]"
-          onClick={() => router.push("/dashboard/payment")}
-        >
-          <span>Payment Details</span>
-          <ChevronRight size={16} />
+        {/* garis pemisah - di dalam form container */}
+        <div className="border-t border-gray-200 pt-4 mt-6">
+          {/* menu tambahan - di dalam form container agar center */}
+          <div className="space-y-2 text-sm text-gray-700 font-medium">
+            <div
+              className="flex justify-between items-center py-3 px-4 cursor-pointer hover:text-[#5B2D24] hover:bg-gray-50 rounded-lg transition-all border border-gray-200"
+              onClick={() => router.push("/dashboard/orders")}
+            >
+              <span>Order History</span>
+              <ChevronRight size={16} />
+            </div>
+            <div
+              className="flex justify-between items-center py-3 px-4 cursor-pointer hover:text-[#5B2D24] hover:bg-gray-50 rounded-lg transition-all border border-gray-200"
+              onClick={() => router.push("/dashboard/payment")}
+            >
+              <span>Payment Details</span>
+              <ChevronRight size={16} />
+            </div>
+          </div>
         </div>
       </div>
 
       {/* tombol bawah */}
-      <div className="flex justify-center gap-4 mt-8 mb-8">
+      <div className="flex justify-center gap-4 mt-8 mb-24">
         <button
           onClick={() => (isEditing ? handleSave() : setIsEditing(true))}
           disabled={saving}
@@ -335,6 +336,9 @@ export default function UserProfilePage() {
           <LogOut size={16} /> Log Out
         </button>
       </div>
+
+      {/* Bottom Navigation */}
+      <BottomNav />
     </div>
   );
 }

@@ -98,7 +98,7 @@ export default function PaymentPage() {
     }
 
     try {
-      const response = await fetch("/api/orders", {
+      const response = await fetch("http://localhost:5000/api/orders", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -216,7 +216,7 @@ export default function PaymentPage() {
         const userData = JSON.parse(user);
 
         // Cek saldo user
-        const response = await fetch("/api/users/balance", {
+        const response = await fetch("http://localhost:5000/api/users/balance", {
           headers: {
             Authorization: `Bearer ${userData.token}`,
           },

@@ -2,10 +2,10 @@
 
 import { useRouter, usePathname } from "next/navigation";
 import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
 import {
   Home,
   User,
-  MessageSquare,
   Heart,
   ShoppingCart,
   ShoppingBag,
@@ -14,113 +14,184 @@ import {
 export default function BottomNav() {
   const router = useRouter();
   const pathname = usePathname();
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
-  // Left and right groups so center cart stays visually centered
-  const leftItems = [
-    { name: "Home", icon: <Home size={22} />, path: "/" },
+  // Navigation items with labels
+  const navItems = [
+    { 
+      name: "Home", 
+      label: "Home",
+      shortLabel: "Home",
+      icon: <Home size={14} />, 
+      path: "/" 
+    },
     {
       name: "Orders",
-      icon: <ShoppingBag size={22} />,
+      label: "Orders",
+      shortLabel: "Orders", 
+      icon: <ShoppingBag size={14} />,
       path: "/dashboard/orders",
+    },
+    { 
+      name: "Cart", 
+      label: "Cart",
+      shortLabel: "Cart",
+      icon: <ShoppingCart size={14} />, 
+      path: "/cart",
+      isCart: true 
+    },
+    { 
+      name: "Favorites", 
+      label: "Favorites",
+      shortLabel: "Favs",
+      icon: <Heart size={14} />, 
+      path: "/favorites" 
+    },
+    { 
+      name: "Profile", 
+      label: "Profile",
+      shortLabel: "Profile",
+      icon: <User size={14} />, 
+      path: "/dashboard/profile" 
     },
   ];
 
-  const rightItems = [
-    { name: "Message", icon: <MessageSquare size={22} />, path: "/message" },
-    { name: "Favorite", icon: <Heart size={22} />, path: "/favorites" },
-    { name: "Profile", icon: <User size={22} />, path: "/dashboard/profile" },
-  ];
+  // Scroll detection
+  useEffect(() => {
+    const controlNavbar = () => {
+      const currentScrollY = window.scrollY;
+      
+      // Show navbar when scrolling up or at top
+      if (currentScrollY < lastScrollY || currentScrollY < 10) {
+        setIsVisible(true);
+      } 
+      // Hide navbar when scrolling down (and not at top)
+      else if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        setIsVisible(false);
+      }
+      
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener('scroll', controlNavbar);
+    
+    // Cleanup
+    return () => {
+      window.removeEventListener('scroll', controlNavbar);
+    };
+  }, [lastScrollY]);
+
+  const handleNavClick = (item: any) => {
+    if (item.name === "Cart") {
+      const user = localStorage.getItem("user");
+      if (!user) {
+        router.push("/login");
+      } else {
+        router.push("/cart");
+      }
+    } else {
+      router.push(item.path);
+    }
+  };
 
   return (
     <motion.div
       initial={{ y: 100, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.5, delay: 2 }}
-      className="fixed bottom-0 left-0 w-full bg-[#7B4540] text-white flex justify-center items-center py-3 rounded-t-2xl shadow-[0_-4px_10px_rgba(0,0,0,0.2)] z-50"
+      animate={{ 
+        y: isVisible ? 0 : 100, 
+        opacity: isVisible ? 1 : 0 
+      }}
+      transition={{ 
+        duration: 0.3, 
+        ease: "easeInOut"
+      }}
+      className="fixed bottom-4 sm:bottom-6 left-1/2 transform -translate-x-1/2 z-50 px-4 w-full max-w-fit"
     >
-      <div className="flex justify-between items-center w-[85%] relative">
-        {/* KIRI */}
-        <div className="flex gap-8">
-          {leftItems.map((item, index) => (
-            <motion.button
-              key={item.name}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: 2.2 + index * 0.1 }}
-              whileHover={{ scale: 1.1, y: -2 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={() => router.push(item.path)}
-              className={`flex flex-col items-center transition-all duration-200 hover:bg-white/10 rounded-lg px-2 py-1 ${
-                pathname === item.path
-                  ? "text-[#8B5E3C]"
-                  : "text-[#B7A89A] hover:text-white"
-              }`}
-            >
-              {item.icon}
-            </motion.button>
-          ))}
-        </div>
+      {/* Capsule Container */}
+      <motion.div
+        initial={{ scale: 0.8 }}
+        animate={{ scale: 1 }}
+        transition={{ duration: 0.4, delay: 1.8 }}
+        className="bg-gradient-to-r from-white via-cream-50 to-amber-50/80 backdrop-blur-xl rounded-full px-1.5 sm:px-3 md:px-4 py-1.5 sm:py-2.5 md:py-3 shadow-2xl border border-orange-100/60 max-w-fit mx-auto"
+        style={{
+          background: 'linear-gradient(135deg, #ffffff 0%, #fefcf7 20%, #fef9f0 40%, #fdf4e6 60%, #fcf0dc 80%, #fbebd2 100%)',
+          boxShadow: '0 10px 40px rgba(139, 69, 19, 0.15), 0 4px 20px rgba(139, 69, 19, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.95), inset 0 -1px 0 rgba(251, 235, 210, 0.5)'
+        }}
+      >
+        <div className="flex items-center gap-0.5 sm:gap-1">
+          {navItems.map((item, index) => {
+            const isActive = pathname === item.path;
+            
+            return (
+              <motion.button
+                key={item.name}
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ 
+                  duration: 0.3, 
+                  delay: 1.9 + index * 0.08,
+                  type: "spring",
+                  stiffness: 200 
+                }}
+                whileHover={{ 
+                  scale: 1.05,
+                  transition: { duration: 0.2 }
+                }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => handleNavClick(item)}
+                className={`relative flex items-center gap-0.5 sm:gap-1 px-1.5 sm:px-2.5 md:px-3 py-1.5 sm:py-2 md:py-2.5 rounded-full transition-all duration-300 ${
+                  isActive
+                    ? "bg-[#7B4540] text-white shadow-lg"
+                    : "text-[#8B4513] hover:text-[#7B4540] hover:bg-[#7B4540]/10"
+                }`}
+              >
+                {/* Active background */}
+                {isActive && (
+                  <motion.div
+                    layoutId="activeTab"
+                    className="absolute inset-0 bg-[#7B4540] rounded-full"
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  />
+                )}
+                
+                {/* Content */}
+                <div className="relative z-10 flex items-center gap-0.5 sm:gap-1">
+                  {/* Icon */}
+                  <div className="flex-shrink-0">
+                    {item.icon}
+                  </div>
+                  
+                  {/* Label - responsive text with different labels */}
+                  <span className="text-[10px] sm:text-xs md:text-sm font-medium whitespace-nowrap">
+                    <span className="sm:hidden">{item.shortLabel}</span>
+                    <span className="hidden sm:inline">{item.label}</span>
+                  </span>
+                </div>
 
-        {/* TOMBOL TENGAH (Cart) */}
-        <motion.button
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{
-            duration: 0.4,
-            delay: 2.4,
-            type: "spring",
-            stiffness: 200,
-          }}
-          whileHover={{ scale: 1.1, rotate: 90 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={() => {
-            const user = localStorage.getItem("user");
-            if (!user) {
-              router.push("/login");
-            } else {
-              router.push("/cart");
-            }
-          }}
-          className="absolute left-1/2 -translate-x-1/2 -top-5 bg-[#7B4540] border-4 border-white p-4 rounded-full shadow-lg transition-all"
-        >
-          <ShoppingCart size={22} className="text-white" />
-        </motion.button>
-
-        {/* KANAN */}
-        <div className="flex gap-6">
-          {rightItems.map((item, index) => (
-            <motion.button
-              key={item.name}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: 2.3 + index * 0.1 }}
-              whileHover={{ scale: 1.1, y: -2 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={() => {
-                if (item.name === "Message") {
-                  // Direct WhatsApp redirect for Message button
-                  const phone = "6281239450638"; // Admin WhatsApp number
-                  const message =
-                    "Halo Admin, saya ingin bertanya tentang Lumera Shop.";
-                  const url = `https://wa.me/${phone}?text=${encodeURIComponent(
-                    message
-                  )}`;
-                  window.open(url, "_blank");
-                } else {
-                  router.push(item.path);
-                }
-              }}
-              className={`flex flex-col items-center transition-all duration-200 hover:bg-white/10 rounded-lg px-2 py-1 ${
-                pathname === item.path
-                  ? "text-[#8B5E3C]"
-                  : "text-[#B7A89A] hover:text-white"
-              }`}
-            >
-              {item.icon}
-            </motion.button>
-          ))}
+                {/* Cart badge */}
+                {item.isCart && (
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="absolute -top-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-bold z-20"
+                  >
+                    3
+                  </motion.div>
+                )}
+              </motion.button>
+            );
+          })}
         </div>
-      </div>
+      </motion.div>
+
+      {/* Floating effect shadow */}
+      <div 
+        className="absolute inset-0 rounded-full blur-xl scale-110 -z-10"
+        style={{
+          background: 'linear-gradient(135deg, rgba(251, 235, 210, 0.4) 0%, rgba(252, 240, 220, 0.3) 50%, rgba(253, 244, 230, 0.2) 100%)'
+        }}
+      ></div>
     </motion.div>
   );
 }

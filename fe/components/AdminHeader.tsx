@@ -13,7 +13,7 @@ export default function AdminHeader() {
         const token = localStorage.getItem("adminToken");
         if (!token) return;
 
-        const response = await fetch("/api/admin/profile", {
+        const response = await fetch("http://localhost:5000/api/admin/profile", {
           credentials: "include",
           headers: token ? { Authorization: `Bearer ${token}` } : undefined,
         });

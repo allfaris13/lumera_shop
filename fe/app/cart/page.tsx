@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Trash, Plus, Minus } from "lucide-react";
 import { motion } from "framer-motion";
+import BottomNav from "@/components/BottomNav";
 
 interface CartItem {
   id: number;
@@ -192,7 +193,7 @@ export default function CartPage() {
             </div>
 
             {/* Mobile sticky checkout bar */}
-            <div className="lg:hidden fixed bottom-4 left-4 right-4 z-40">
+            <div className="lg:hidden fixed bottom-20 left-4 right-4 z-40">
               <div className="bg-white rounded-2xl p-3 shadow-lg border border-gray-100 flex items-center justify-between gap-4">
                 <div>
                   <div className="text-xs text-gray-500">Subtotal</div>
@@ -212,6 +213,9 @@ export default function CartPage() {
           </>
         )}
       </div>
+
+      {/* Bottom Navigation */}
+      <BottomNav />
     </div>
   );
 }

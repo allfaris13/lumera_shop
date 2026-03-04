@@ -46,7 +46,7 @@ export default function OrderTable() {
         return;
       }
 
-      const response = await fetch("/api/orders/admin", {
+      const response = await fetch("http://localhost:5000/api/orders/admin", {
         headers: {
           Authorization: `Bearer ${adminToken}`,
         },
@@ -73,7 +73,7 @@ export default function OrderTable() {
         return;
       }
 
-      const response = await fetch(`/api/orders/${orderId}/payment`, {
+      const response = await fetch(`http://localhost:5000/api/orders/${orderId}/payment`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

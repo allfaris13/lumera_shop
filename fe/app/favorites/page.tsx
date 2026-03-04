@@ -20,7 +20,7 @@ export default function FavoritePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FFF9F6] flex flex-col justify-between">
+    <div className="min-h-screen bg-[#FFF9F6]">
       {/* Header */}
       <div className="px-6 pt-8">
         <h1 className="text-2xl font-bold text-[#3E2723] mb-2">Favorite Foods</h1>
@@ -76,9 +76,7 @@ export default function FavoritePage() {
       </div>
 
       {/* Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0">
-        <BottomNav />
-      </div>
+      <BottomNav />
     </div>
   );
 }

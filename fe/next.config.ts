@@ -15,7 +15,6 @@ const nextConfig = {
         hostname: "example.com",
       },
     ],
-    domains: ['localhost'],
     unoptimized: true,
   },
   async rewrites() {
@@ -25,6 +24,17 @@ const nextConfig = {
         destination: 'http://localhost:5000/uploads/:path*',
       },
     ];
+  },
+  // Turbopack configuration for Next.js 16
+  turbopack: {
+    // Empty config to silence the warning
+  },
+  // Performance optimizations
+  experimental: {
+    optimizeCss: true,
+  },
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
   },
 };
 

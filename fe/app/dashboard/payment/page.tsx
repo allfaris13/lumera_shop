@@ -40,7 +40,7 @@ export default function PaymentDetailsPage() {
         return;
       }
 
-      const response = await fetch("/api/orders", {
+      const response = await fetch("http://localhost:5000/api/orders", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
