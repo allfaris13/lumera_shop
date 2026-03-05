@@ -4,6 +4,7 @@ import { Edit, Trash2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { API_URL } from "@/lib/api";
 
 interface Product {
   id: number;
@@ -27,7 +28,7 @@ export default function AdminProductsPage() {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/products");
+      const response = await fetch(`${API_URL}/api/products`);
       if (!response.ok) throw new Error("Failed to fetch products");
       const data = await response.json();
       setProducts(data);
@@ -128,11 +129,10 @@ export default function AdminProductsPage() {
                 <td className="p-4 text-gray-600">{item.stock}</td>
                 <td className="p-4">
                   <span
-                    className={`px-3 py-1 text-xs font-medium rounded-full ${
-                      item.stock > 0
+                    className={`px-3 py-1 text-xs font-medium rounded-full ${item.stock > 0
                         ? "bg-green-100 text-green-600"
                         : "bg-red-100 text-red-600"
-                    }`}
+                      }`}
                   >
                     {item.stock > 0 ? "Active" : "Out of Stock"}
                   </span>

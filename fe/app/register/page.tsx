@@ -2,10 +2,11 @@
 "use client"; // WAJIB karena menggunakan hooks (useState) dan Framer Motion
 
 import React, { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Eye, EyeOff, Mail, Lock } from "lucide-react";
+import { UserPlus, Mail, Lock, User, Phone, MapPin, Eye, EyeOff, ArrowRight, CheckCircle2 } from "lucide-react";
+import { API_URL } from "@/lib/api";
 
 // Varian untuk animasi input (muncul berurutan)
 const itemVariants = {
@@ -182,30 +183,38 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
 
 export default function RegisterPage() {
   const router = useRouter();
-  const [firstName, setFirstName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [phone, setPhone] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    phone: "",
+    address: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
+    if (formData.password !== formData.confirmPassword) {
       alert("Passwords do not match!");
       return;
     }
 
     try {
-      const response = await fetch("http://localhost:5000/api/auth/register", {
+      const response = await fetch(`${API_URL}/api/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name: firstName,
-          email,
-          password,
-          phone,
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+          phone: formData.phone,
+          address: formData.address,
         }),
       });
 
@@ -290,8 +299,9 @@ export default function RegisterPage() {
               type="text"
               placeholder="Full Name"
               className="w-full px-4 py-3 bg-[#F4E4BC]/30 border border-[#E6D7C3] rounded-xl focus:outline-none focus:border-[#8B4513] focus:bg-white transition-all text-[#654321] placeholder-[#8B4513]/60 text-base"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
+              value={formData.name}
+              onChange={handleChange}
+              name="name"
               required
             />
           </motion.div>
@@ -302,8 +312,9 @@ export default function RegisterPage() {
               type="email"
               placeholder="Email Address"
               className="w-full px-4 py-3 bg-[#F4E4BC]/30 border border-[#E6D7C3] rounded-xl focus:outline-none focus:border-[#8B4513] focus:bg-white transition-all text-[#654321] placeholder-[#8B4513]/60 text-base"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={formData.email}
+              onChange={handleChange}
+              name="email"
               required
             />
           </motion.div>
@@ -314,8 +325,9 @@ export default function RegisterPage() {
               type="password"
               placeholder="Password"
               className="w-full px-4 py-3 bg-[#F4E4BC]/30 border border-[#E6D7C3] rounded-xl focus:outline-none focus:border-[#8B4513] focus:bg-white transition-all text-[#654321] placeholder-[#8B4513]/60 text-base"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={formData.password}
+              onChange={handleChange}
+              name="password"
               required
             />
           </motion.div>
@@ -326,8 +338,9 @@ export default function RegisterPage() {
               type="tel"
               placeholder="Phone Number"
               className="w-full px-4 py-3 bg-[#F4E4BC]/30 border border-[#E6D7C3] rounded-xl focus:outline-none focus:border-[#8B4513] focus:bg-white transition-all text-[#654321] placeholder-[#8B4513]/60 text-base"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
+              value={formData.phone}
+              onChange={handleChange}
+              name="phone"
               required
             />
           </motion.div>
@@ -338,8 +351,9 @@ export default function RegisterPage() {
               type="password"
               placeholder="Repeat Password"
               className="w-full px-4 py-3 bg-[#F4E4BC]/30 border border-[#E6D7C3] rounded-xl focus:outline-none focus:border-[#8B4513] focus:bg-white transition-all text-[#654321] placeholder-[#8B4513]/60 text-base"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              name="confirmPassword"
               required
             />
           </motion.div>

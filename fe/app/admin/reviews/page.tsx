@@ -12,6 +12,7 @@ import {
   Filter,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { API_URL } from "@/lib/api";
 
 interface Review {
   id: number;
@@ -58,7 +59,7 @@ export default function ReviewsPage() {
   const fetchReviewsData = async () => {
     try {
       const token = localStorage.getItem("adminToken");
-      const response = await fetch("http://localhost:5000/api/admin/reviews", {
+      const response = await fetch(`${API_URL}/api/admin/reviews`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -104,9 +105,8 @@ export default function ReviewsPage() {
       <Star
         key={i}
         size={16}
-        className={`${
-          i < rating ? "text-yellow-400 fill-current" : "text-gray-300"
-        }`}
+        className={`${i < rating ? "text-yellow-400 fill-current" : "text-gray-300"
+          }`}
       />
     ));
   };
@@ -216,7 +216,7 @@ export default function ReviewsPage() {
             {[5, 4, 3, 2, 1].map((rating) => {
               const count =
                 stats.ratingDistribution[
-                  rating as keyof typeof stats.ratingDistribution
+                rating as keyof typeof stats.ratingDistribution
                 ];
               const percentage =
                 stats.totalReviews > 0 ? (count / stats.totalReviews) * 100 : 0;
@@ -259,11 +259,10 @@ export default function ReviewsPage() {
                 <button
                   key={rating || "all"}
                   onClick={() => setFilterRating(rating)}
-                  className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
-                    filterRating === rating
+                  className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${filterRating === rating
                       ? "bg-blue-600 text-white"
                       : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                  }`}
+                    }`}
                 >
                   {rating ? `${rating}★` : "All"}
                 </button>

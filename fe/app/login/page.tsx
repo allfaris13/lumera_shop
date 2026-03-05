@@ -1,4 +1,3 @@
-// app/login/page.tsx
 "use client";
 
 import React, { useState } from "react";
@@ -6,6 +5,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
+import { API_URL } from "@/lib/api";
 
 // Varian untuk animasi input (muncul berurutan)
 const itemVariants = {
@@ -196,7 +196,7 @@ export default function LoginPage() {
       // Normalize email to avoid casing/whitespace mismatches with backend
       const normalizedEmail = email.trim().toLowerCase();
 
-      const response = await fetch(`http://localhost:5000/api/auth/login`, {
+      const response = await fetch(`${API_URL}/api/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -218,7 +218,7 @@ export default function LoginPage() {
       // NOTE: For production/higher security, prefer httpOnly cookies set by the backend.
       try {
         const maxAge = 60 * 60 * 24 * 7; // 7 days
-        document.cookie = `${tokenKey}=${data.token}; Path=/; Max-Age=${maxAge}; SameSite=Lax`;
+        document.cookie = `${tokenKey}=${data.token}; Path =/; Max-Age=${maxAge}; SameSite=Lax`;
       } catch (e) {
         // document may not be available in SSR — this is a client component so should be fine
         console.warn("Failed to set cookie for token", e);

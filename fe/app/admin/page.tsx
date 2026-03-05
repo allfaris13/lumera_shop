@@ -19,6 +19,7 @@ import {
   Calendar,
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { API_URL } from "@/lib/api";
 
 export default function AdminDashboardPage() {
   const [stats, setStats] = useState<{
@@ -45,7 +46,7 @@ export default function AdminDashboardPage() {
   const fetchStats = async () => {
     try {
       const token = localStorage.getItem("adminToken");
-      const response = await fetch("http://localhost:5000/api/admin/stats", {
+      const response = await fetch(`${API_URL}/api/admin/stats`, {
         credentials: "include",
         headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       });

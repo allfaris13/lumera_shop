@@ -3,6 +3,7 @@ import { useEffect, useState, useMemo } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { API_URL } from "@/lib/api";
 import {
   Heart,
   Facebook,
@@ -72,7 +73,7 @@ export default function HomePage() {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second timeout
 
-        const response = await fetch("http://localhost:5000/api/products", {
+        const response = await fetch(`${API_URL}/api/products`, {
           signal: controller.signal
         });
 
@@ -124,11 +125,12 @@ export default function HomePage() {
   useEffect(() => {
     const fetchUserData = async (token: string) => {
       try {
-        const response = await fetch("http://localhost:5000/api/users/profile", {
+        const response = await fetch(`${API_URL}/api/users/profile`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
+
 
         if (!response.ok) {
           console.error("Failed to fetch user profile for header");
@@ -522,8 +524,8 @@ export default function HomePage() {
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setSelectedCategory(cat.value)}
                   className={`px-6 py-3 rounded-xl text-sm font-medium whitespace-nowrap transition-all ${selectedCategory === cat.value
-                      ? "bg-[#7B4540] text-white shadow-lg shadow-[#7B4540]/20"
-                      : "bg-white text-[#2b1d1a] border border-[#E8DCC4]/30 hover:border-[#7B4540]/30 hover:bg-[#7B4540]/5"
+                    ? "bg-[#7B4540] text-white shadow-lg shadow-[#7B4540]/20"
+                    : "bg-white text-[#2b1d1a] border border-[#E8DCC4]/30 hover:border-[#7B4540]/30 hover:bg-[#7B4540]/5"
                     }`}
                 >
                   {cat.label}
@@ -560,8 +562,8 @@ export default function HomePage() {
                     whileTap={{ scale: 0.9 }}
                     onClick={(e) => toggleFavorite(product, e)}
                     className={`absolute top-4 right-4 p-2 rounded-full z-10 transition-all ${isFavorite(product.id)
-                        ? "bg-pink-100 text-pink-500 shadow-lg"
-                        : "bg-white/80 backdrop-blur-sm text-gray-400 hover:bg-white"
+                      ? "bg-pink-100 text-pink-500 shadow-lg"
+                      : "bg-white/80 backdrop-blur-sm text-gray-400 hover:bg-white"
                       }`}
                   >
                     <Heart

@@ -14,6 +14,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
+import { API_URL } from "@/lib/api";
 
 export default function UserProfilePage() {
   const router = useRouter();
@@ -45,7 +46,7 @@ export default function UserProfilePage() {
         return;
       }
 
-      const response = await fetch("http://localhost:5000/api/users/profile", {
+      const response = await fetch(`${API_URL}/api/users/profile`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -111,7 +112,7 @@ export default function UserProfilePage() {
 
       console.log("Sending request to /api/profile");
 
-      const response = await fetch("http://localhost:5000/api/users/profile", {
+      const response = await fetch(`${API_URL}/api/users/profile`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,

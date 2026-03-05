@@ -11,6 +11,7 @@ import {
   Clock,
   XCircle,
 } from "lucide-react";
+import { API_URL } from "@/lib/api";
 
 interface Order {
   id: number;
@@ -40,7 +41,7 @@ export default function PaymentDetailsPage() {
         return;
       }
 
-      const response = await fetch("http://localhost:5000/api/orders", {
+      const response = await fetch(`${API_URL}/api/orders`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

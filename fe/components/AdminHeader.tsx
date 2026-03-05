@@ -1,5 +1,6 @@
 import { Calendar, Bell, UserCircle } from "lucide-react";
 import { useEffect, useState } from "react";
+import { API_URL } from "@/lib/api";
 
 export default function AdminHeader() {
   const [adminProfile, setAdminProfile] = useState<{
@@ -13,7 +14,7 @@ export default function AdminHeader() {
         const token = localStorage.getItem("adminToken");
         if (!token) return;
 
-        const response = await fetch("http://localhost:5000/api/admin/profile", {
+        const response = await fetch(`${API_URL}/api/admin/profile`, {
           credentials: "include",
           headers: token ? { Authorization: `Bearer ${token}` } : undefined,
         });

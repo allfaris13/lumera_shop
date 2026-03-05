@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
+import { API_URL } from "@/lib/api";
 
 interface Product {
   id: number;
@@ -25,8 +26,8 @@ export default function ProductList() {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        
-        const response = await fetch('http://localhost:5000/api/products', {
+
+        const response = await fetch(`${API_URL}/api/products`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -34,11 +35,11 @@ export default function ProductList() {
           // Add timeout
           signal: AbortSignal.timeout(10000) // 10 second timeout
         });
-        
+
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
+
         const data = await response.json();
         setProducts(data);
         setError(null);
@@ -64,7 +65,7 @@ export default function ProductList() {
             <div key={i} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden animate-pulse">
               {/* Image skeleton */}
               <div className="w-full aspect-square bg-gray-200"></div>
-              
+
               {/* Content skeleton */}
               <div className="p-3">
                 <div className="h-4 bg-gray-200 rounded mb-2"></div>
@@ -90,8 +91,8 @@ export default function ProductList() {
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
           <p className="font-bold">Error!</p>
           <p>{error}</p>
-          <button 
-            onClick={() => window.location.reload()} 
+          <button
+            onClick={() => window.location.reload()}
             className="mt-2 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
           >
             Retry
@@ -130,7 +131,7 @@ export default function ProductList() {
                 placeholder="blur"
                 blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
               />
-              
+
               {/* Stock Badge */}
               {item.stock > 0 ? (
                 <div className="absolute top-2 left-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full font-medium">
@@ -149,7 +150,7 @@ export default function ProductList() {
               <h3 className="text-sm font-medium text-gray-900 line-clamp-2 mb-1 leading-tight">
                 {item.name}
               </h3>
-              
+
               {/* Description */}
               <p className="text-xs text-gray-500 line-clamp-1 mb-2">
                 {item.description}
@@ -160,7 +161,7 @@ export default function ProductList() {
                 <span className="text-[#FF6B35] font-bold text-sm">
                   Rp {item.price.toLocaleString()}
                 </span>
-                
+
                 {/* Rating placeholder - you can add actual rating later */}
                 <div className="flex items-center gap-1">
                   <span className="text-yellow-400 text-xs">⭐</span>

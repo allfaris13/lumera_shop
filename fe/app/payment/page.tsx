@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Truck, QrCode, Loader2, Download } from "lucide-react";
+import { API_URL } from "@/lib/api";
 
 interface PaymentOptionProps {
   selected: boolean;
@@ -98,7 +99,7 @@ export default function PaymentPage() {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/api/orders", {
+      const response = await fetch(`${API_URL}/api/orders`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -176,11 +177,10 @@ export default function PaymentPage() {
 
   const handleContactAdmin = useCallback(() => {
     const phone = "6281239450638"; // Nomor WhatsApp admin
-    const message = `Halo Admin, saya telah menyelesaikan pembayaran ${
-      method === "qris" ? "QRIS" : "COD"
-    }.\n\nDetail Pesanan:\n🍔 Pesanan: ${name}\nJumlah: ${portion} porsi\nTotal: Rp ${total.toLocaleString(
-      "id-ID"
-    )}\n\nEstimasi pengiriman dalam 24 jam. Mohon konfirmasi pesanan saya dan waktu pengiriman yang tersedia.\n\nTerima kasih!`;
+    const message = `Halo Admin, saya telah menyelesaikan pembayaran ${method === "qris" ? "QRIS" : "COD"
+      }.\n\nDetail Pesanan:\n🍔 Pesanan: ${name}\nJumlah: ${portion} porsi\nTotal: Rp ${total.toLocaleString(
+        "id-ID"
+      )}\n\nEstimasi pengiriman dalam 24 jam. Mohon konfirmasi pesanan saya dan waktu pengiriman yang tersedia.\n\nTerima kasih!`;
     const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
 
     // Create a temporary link element for better cross-device compatibility
@@ -216,7 +216,7 @@ export default function PaymentPage() {
         const userData = JSON.parse(user);
 
         // Cek saldo user
-        const response = await fetch("http://localhost:5000/api/users/balance", {
+        const response = await fetch(`${API_URL}/api/users/balance`, {
           headers: {
             Authorization: `Bearer ${userData.token}`,
           },
@@ -500,8 +500,8 @@ export default function PaymentPage() {
                     {paymentStatus === "checking"
                       ? "Menunggu pembayaran..."
                       : paymentStatus === "success"
-                      ? "Pembayaran Berhasil!"
-                      : "Memproses pembayaran secara otomatis..."}
+                        ? "Pembayaran Berhasil!"
+                        : "Memproses pembayaran secara otomatis..."}
                   </p>
                 </>
               )}
@@ -578,17 +578,15 @@ function PaymentOption({
   return (
     <div
       onClick={onClick}
-      className={`flex justify-between items-center px-4 py-3 rounded-2xl shadow-sm transition-all cursor-pointer ${
-        selected
+      className={`flex justify-between items-center px-4 py-3 rounded-2xl shadow-sm transition-all cursor-pointer ${selected
           ? "bg-[#2b1d1a] border-2 border-[#2b1d1a] text-white"
           : "bg-gray-100 border-2 border-transparent text-gray-800"
-      }`}
+        }`}
     >
       <div className="flex items-center gap-3">
         <div
-          className={`p-2 rounded-lg ${
-            selected ? "bg-white/20" : "bg-gray-200"
-          }`}
+          className={`p-2 rounded-lg ${selected ? "bg-white/20" : "bg-gray-200"
+            }`}
         >
           <Icon
             size={24}
@@ -597,27 +595,24 @@ function PaymentOption({
         </div>
         <div>
           <p
-            className={`text-[14px] font-medium ${
-              selected ? "text-white" : "text-gray-800"
-            }`}
+            className={`text-[14px] font-medium ${selected ? "text-white" : "text-gray-800"
+              }`}
           >
             {title}
           </p>
           <p
-            className={`text-xs ${
-              selected ? "text-gray-300" : "text-gray-500"
-            }`}
+            className={`text-xs ${selected ? "text-gray-300" : "text-gray-500"
+              }`}
           >
             {subtitle}
           </p>
         </div>
       </div>
       <div
-        className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-          selected
+        className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selected
             ? "border-white bg-[#7B4540]"
             : "border-gray-400 bg-transparent"
-        }`}
+          }`}
       >
         {selected && <div className="w-2.5 h-2.5 bg-white rounded-full" />}
       </div>

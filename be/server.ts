@@ -16,13 +16,13 @@ import authRoutes from './routes/authRoutes';
 const prisma = new PrismaClient();
 
 const app = express();
-const PORT = 5000; // Port 5000 sudah sesuai dengan setting FE Anda
+const PORT = process.env.PORT || 500;
 
 // --- Middleware ---
 
 // 1. CORS Configuration: Mengizinkan frontend Next.js (port 3000)
 app.use(cors({
-    origin: 'http://localhost:3000', // Izinkan FE Next.js
+    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
 }));
@@ -52,7 +52,7 @@ app.use('/api/auth', authRoutes);
 
 // Endpoint Root - Verifikasi Server
 app.get('/', (req, res) => {
-    res.status(200).json({ 
+    res.status(200).json({
         message: 'Lumera Shop Backend API is running successfully!',
         service: 'Express.js',
         database: 'PostgreSQL/Prisma',

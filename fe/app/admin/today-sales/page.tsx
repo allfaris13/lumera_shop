@@ -9,6 +9,7 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { API_URL } from "@/lib/api";
 
 interface TodaySalesData {
   totalSales: number;
@@ -46,7 +47,7 @@ export default function TodaySalesPage() {
     try {
       const token = localStorage.getItem("adminToken");
       const response = await fetch(
-        "http://localhost:5000/api/admin/today-sales",
+        `${API_URL}/api/admin/today-sales`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

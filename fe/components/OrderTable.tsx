@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { API_URL } from "@/lib/api";
 
 interface OrderItem {
   id: number;
@@ -46,7 +47,7 @@ export default function OrderTable() {
         return;
       }
 
-      const response = await fetch("http://localhost:5000/api/orders/admin", {
+      const response = await fetch(`${API_URL}/api/orders/admin`, {
         headers: {
           Authorization: `Bearer ${adminToken}`,
         },
@@ -73,7 +74,7 @@ export default function OrderTable() {
         return;
       }
 
-      const response = await fetch(`http://localhost:5000/api/orders/${orderId}/payment`, {
+      const response = await fetch(`${API_URL}/api/orders/${orderId}/payment`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -125,11 +126,10 @@ export default function OrderTable() {
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`pb-2 text-sm font-medium ${
-              activeTab === tab
+            className={`pb-2 text-sm font-medium ${activeTab === tab
                 ? "border-b-2 border-blue-600 text-blue-600"
                 : "text-gray-400 hover:text-blue-600"
-            }`}
+              }`}
           >
             {tab}
           </button>

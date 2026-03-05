@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft, Star, User } from "lucide-react";
 import { useState, useMemo, useEffect, useCallback } from "react";
+import { API_URL } from "@/lib/api";
 
 interface Product {
   id: number;
@@ -52,7 +53,7 @@ export default function ProductDetail() {
   // Function to fetch product reviews
   const fetchProductReviews = useCallback(async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/products/${id}/reviews`);
+      const response = await fetch(`${API_URL}/api/products/${id}/reviews`);
       if (!response.ok) {
         const errBody = await response.json().catch(() => null);
         throw new Error(errBody?.message || "Failed to fetch reviews");
@@ -68,7 +69,7 @@ export default function ProductDetail() {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/products/${id}`);
+        const response = await fetch(`${API_URL}/api/products/${id}`);
         if (!response.ok) {
           // try to use backend message if provided
           let errBody = null;
@@ -126,8 +127,7 @@ export default function ProductDetail() {
       router.push("/login");
     } else {
       router.push(
-        `/payment?name=${encodeURIComponent(product.name)}&price=${
-          product.price
+        `/payment?name=${encodeURIComponent(product.name)}&price=${product.price
         }&portion=${portion}`
       );
     }
@@ -159,7 +159,7 @@ export default function ProductDetail() {
     setSubmittingRating(true);
     setRatingMessage(null);
     try {
-      const resp = await fetch(`http://localhost:5000/api/products/${id}/rate`, {
+      const resp = await fetch(`${API_URL}/api/products/${id}/rate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -174,10 +174,10 @@ export default function ProductDetail() {
       setProduct((p) =>
         p
           ? {
-              ...p,
-              averageRating: resData.averageRating,
-              ratingCount: resData.ratingCount,
-            }
+            ...p,
+            averageRating: resData.averageRating,
+            ratingCount: resData.ratingCount,
+          }
           : p
       );
       setRatingMessage("Thank you for your feedback!");
@@ -261,7 +261,7 @@ export default function ProductDetail() {
 
           {/* Kanan: Opsi Pemesanan (Porsi & Total) */}
           <div className="w-full md:w-1/2 space-y-6">
-          <motion.div variants={fadeLeft} custom={3}>
+            <motion.div variants={fadeLeft} custom={3}>
               <h2 className="text-2xl font-bold text-[#2b1d1a] mb-2">
                 {product.name}
               </h2>
@@ -418,11 +418,10 @@ export default function ProductDetail() {
                     >
                       <Star
                         size={24}
-                        className={`${
-                          (userRating || 0) >= n
+                        className={`${(userRating || 0) >= n
                             ? "text-yellow-500 fill-yellow-500"
                             : "text-gray-300"
-                        } transition-colors`}
+                          } transition-colors`}
                       />
                     </button>
                   ))}
@@ -448,11 +447,10 @@ export default function ProductDetail() {
                 <button
                   onClick={handleRatingSubmit}
                   disabled={!userRating || submittingRating}
-                  className={`px-6 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    !userRating || submittingRating
+                  className={`px-6 py-2 rounded-lg text-sm font-medium transition-colors ${!userRating || submittingRating
                       ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                       : "bg-[#7B4540] text-white hover:bg-[#2b1d1a]"
-                  }`}
+                    }`}
                 >
                   {submittingRating ? "Submitting..." : "Submit Review"}
                 </button>
@@ -460,11 +458,10 @@ export default function ProductDetail() {
 
               {ratingMessage && (
                 <div
-                  className={`text-sm text-right ${
-                    ratingMessage.includes("Thank you")
+                  className={`text-sm text-right ${ratingMessage.includes("Thank you")
                       ? "text-green-600"
                       : "text-red-600"
-                  }`}
+                    }`}
                 >
                   {ratingMessage}
                 </div>
@@ -510,11 +507,10 @@ export default function ProductDetail() {
                                   <Star
                                     key={i}
                                     size={14}
-                                    className={`${
-                                      i < review.rating
+                                    className={`${i < review.rating
                                         ? "text-yellow-500 fill-current"
                                         : "text-gray-300"
-                                    }`}
+                                      }`}
                                   />
                                 ))}
                               </div>

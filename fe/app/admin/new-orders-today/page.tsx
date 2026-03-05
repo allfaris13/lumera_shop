@@ -11,6 +11,7 @@ import {
   Eye,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { API_URL } from "@/lib/api";
 
 interface Order {
   id: number;
@@ -45,7 +46,7 @@ export default function NewOrdersTodayPage() {
     try {
       const token = localStorage.getItem("adminToken");
       const response = await fetch(
-        "http://localhost:5000/api/admin/new-orders-today",
+        `${API_URL}/api/admin/new-orders-today`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

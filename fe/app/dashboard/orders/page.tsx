@@ -16,6 +16,7 @@ import {
   Receipt,
 } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
+import { API_URL } from "@/lib/api";
 
 interface OrderItem {
   id: number;
@@ -59,7 +60,7 @@ export default function OrderHistoryPage() {
         return;
       }
 
-      const response = await fetch("http://localhost:5000/api/orders", {
+      const response = await fetch(`${API_URL}/api/orders`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -252,7 +253,7 @@ export default function OrderHistoryPage() {
                       Rp {order.totalAmount.toLocaleString("id-ID")}
                     </span>
                   </div>
-                  
+
                   {/* View Details Button */}
                   <button
                     onClick={() => openOrderDetails(order)}
@@ -296,7 +297,7 @@ export default function OrderHistoryPage() {
                   <Receipt size={20} className="text-[#7B4540]" />
                   <h3 className="font-semibold text-gray-800">Order Information</h3>
                 </div>
-                
+
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-gray-600">Order ID:</span>

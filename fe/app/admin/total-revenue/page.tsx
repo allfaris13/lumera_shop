@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { DollarSign, ArrowLeft, BarChart3 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { API_URL } from "@/lib/api";
 import {
   BarChart,
   Bar,
@@ -54,7 +55,7 @@ export default function TotalRevenuePage() {
     try {
       const token = localStorage.getItem("adminToken");
       const response = await fetch(
-        "http://localhost:5000/api/admin/total-revenue",
+        `${API_URL}/api/admin/total-revenue`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -140,21 +141,19 @@ export default function TotalRevenuePage() {
       <div className="flex gap-2">
         <button
           onClick={() => setTimeRange("monthly")}
-          className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-            timeRange === "monthly"
+          className={`px-4 py-2 rounded-lg font-medium transition-colors ${timeRange === "monthly"
               ? "bg-blue-600 text-white"
               : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-          }`}
+            }`}
         >
           Monthly
         </button>
         <button
           onClick={() => setTimeRange("yearly")}
-          className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-            timeRange === "yearly"
+          className={`px-4 py-2 rounded-lg font-medium transition-colors ${timeRange === "yearly"
               ? "bg-blue-600 text-white"
               : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-          }`}
+            }`}
         >
           Yearly
         </button>
