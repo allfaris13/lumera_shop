@@ -1,3 +1,5 @@
+import React from "react";
+
 export default function AdminRestaurantDetailPage() {
-    return null;
+    return <div>Detail Restaurant</div>;
 }
