@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { Send } from "lucide-react";
 
 export default function AdminChatPage() {
@@ -10,7 +10,7 @@ export default function AdminChatPage() {
   ]);
   const [input, setInput] = useState("");
 
-  const handleSend = (e) => {
+  const handleSend = (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim()) return;
     setMessages([...messages, { sender: "admin", text: input }]);
@@ -23,16 +23,14 @@ export default function AdminChatPage() {
         {messages.map((msg, i) => (
           <div
             key={i}
-            className={`flex ${
-              msg.sender === "admin" ? "justify-end" : "justify-start"
-            }`}
+            className={`flex ${msg.sender === "admin" ? "justify-end" : "justify-start"
+              }`}
           >
             <div
-              className={`px-4 py-2 rounded-lg max-w-[70%] ${
-                msg.sender === "admin"
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-200 text-gray-800"
-              }`}
+              className={`px-4 py-2 rounded-lg max-w-[70%] ${msg.sender === "admin"
+                ? "bg-blue-600 text-white"
+                : "bg-gray-200 text-gray-800"
+                }`}
             >
               {msg.text}
             </div>
