@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import AdminSidebar from "@/components/AdminSidebar";
 import AdminHeader from "@/components/AdminHeader";
 
@@ -13,8 +13,14 @@ export default function AdminLayout({
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
+    if (pathname === "/admin/login") {
+      setLoading(false);
+      return;
+    }
+
     const token = localStorage.getItem("adminToken");
     if (!token) {
       router.push("/admin/login");
@@ -24,7 +30,11 @@ export default function AdminLayout({
     // Optional: Verify token with backend
     setIsAuthenticated(true);
     setLoading(false);
-  }, [router]);
+  }, [router, pathname]);
+
+  if (pathname === "/admin/login") {
+    return <>{children}</>;
+  }
 
   if (loading) {
     return (
@@ -44,9 +54,9 @@ export default function AdminLayout({
       <AdminSidebar />
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col p-6">
+      <div className="flex-1 flex flex-col p-6 overflow-hidden">
         <AdminHeader />
-        <main className="flex-1 mt-4">{children}</main>
+        <main className="flex-1 mt-4 overflow-auto">{children}</main>
       </div>
     </div>
   );

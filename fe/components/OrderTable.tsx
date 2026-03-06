@@ -127,8 +127,8 @@ export default function OrderTable() {
             key={tab}
             onClick={() => setActiveTab(tab)}
             className={`pb-2 text-sm font-medium ${activeTab === tab
-                ? "border-b-2 border-blue-600 text-blue-600"
-                : "text-gray-400 hover:text-blue-600"
+              ? "border-b-2 border-blue-600 text-blue-600"
+              : "text-gray-400 hover:text-blue-600"
               }`}
           >
             {tab}
@@ -138,16 +138,16 @@ export default function OrderTable() {
 
       {/* Table */}
       <table className="w-full text-sm">
-        <thead className="text-gray-500 border-b">
+        <thead className="text-gray-500 border-b text-left">
           <tr>
-            <th className="py-2">ID</th>
-            <th>Name</th>
-            <th>Phone</th>
-            <th>Date</th>
-            <th>Payment Method</th>
-            <th>Price</th>
-            <th>Status</th>
-            <th>Actions</th>
+            <th className="py-3 px-2 font-semibold">ID</th>
+            <th className="py-3 px-2 font-semibold">Buyer Name</th>
+            <th className="py-3 px-2 font-semibold">Phone</th>
+            <th className="py-3 px-2 font-semibold">Date</th>
+            <th className="py-3 px-2 font-semibold">Method</th>
+            <th className="py-3 px-2 font-semibold">Total Price</th>
+            <th className="py-3 px-2 font-semibold">Status</th>
+            <th className="py-3 px-2 font-semibold text-center">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -156,12 +156,12 @@ export default function OrderTable() {
               key={order.id}
               className="border-b last:border-none hover:bg-blue-50 transition"
             >
-              <td className="py-3 font-medium">#{order.id}</td>
-              <td>{order.user.name}</td>
-              <td>{order.user.phone}</td>
-              <td>{new Date(order.orderDate).toLocaleDateString()}</td>
-              <td>{order.paymentMethod}</td>
-              <td>Rp {order.totalAmount.toLocaleString()}</td>
+              <td className="py-4 px-2 font-bold text-gray-900">#{order.id}</td>
+              <td className="py-4 px-2 font-semibold text-blue-900">{order.user.name}</td>
+              <td className="py-4 px-2 text-gray-700 font-medium">{order.user.phone}</td>
+              <td className="py-4 px-2 text-gray-500">{new Date(order.orderDate).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
+              <td className="py-4 px-2 text-gray-800 font-medium">{order.paymentMethod}</td>
+              <td className="py-4 px-2 font-bold text-gray-900">Rp {order.totalAmount.toLocaleString('id-ID')}</td>
               <td>
                 <span
                   className={`px-3 py-1 rounded-full text-xs font-medium ${badgeColor(
