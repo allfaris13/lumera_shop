@@ -10,12 +10,13 @@ export default function AdminChatPage() {
   ]);
   const [input, setInput] = useState("");
 
-  // Versi Tanpa Parameter 'e'
-  const handleSend = () => {
-    if (!input.trim()) return;
-    setMessages([...messages, { sender: "admin", text: input }]);
-    setInput(""); 
-  };
+// @ts-ignore
+const handleSend = (e: any) => {
+  e.preventDefault();
+  if (!input.trim()) return;
+  setMessages([...messages, { sender: "admin", text: input }]);
+  setInput("");
+};
 
   return (
     <div className="flex flex-col h-[80vh] bg-white rounded-xl shadow-md text-black">
