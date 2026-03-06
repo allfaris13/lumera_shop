@@ -10,13 +10,13 @@ export default function AdminChatPage() {
   ]);
   const [input, setInput] = useState("");
 
-// @ts-ignore
-const handleSend = (e: any) => {
-  e.preventDefault();
-  if (!input.trim()) return;
-  setMessages([...messages, { sender: "admin", text: input }]);
-  setInput("");
-};
+  // @ts-ignore
+  const handleSend = (e: any) => {
+    e.preventDefault();
+    if (!input.trim()) return;
+    setMessages([...messages, { sender: "admin", text: input }]);
+    setInput("");
+  };
 
   return (
     <div className="flex flex-col h-[80vh] bg-white rounded-xl shadow-md text-black">
@@ -27,11 +27,10 @@ const handleSend = (e: any) => {
             className={`flex ${msg.sender === "admin" ? "justify-end" : "justify-start"}`}
           >
             <div
-              className={`px-4 py-2 rounded-lg max-w-[70%] ${
-                msg.sender === "admin"
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-200 text-gray-800"
-              }`}
+              className={`px-4 py-2 rounded-lg max-w-[70%] ${msg.sender === "admin"
+                ? "bg-blue-600 text-white"
+                : "bg-gray-200 text-gray-800"
+                }`}
             >
               {msg.text}
             </div>
