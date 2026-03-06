@@ -10,16 +10,21 @@ export default function AdminChatPage() {
   ]);
   const [input, setInput] = useState("");
 
-  // @ts-ignore
-  const handleSend = (e: any) => {
-    e.preventDefault();
+  // Fungsi handleSend SEKARANG TANPA PARAMETER (e)
+  // Ini kunci agar lolos dari error "Parameter 'e' implicitly has an 'any' type"
+  const handleSend = () => {
     if (!input.trim()) return;
-    setMessages([...messages, { sender: "admin", text: input }]);
+    
+    // Update pesan dengan aman
+    setMessages((prev) => [...prev, { sender: "admin", text: input }]);
+    
+    // Kosongkan input setelah kirim
     setInput("");
   };
 
   return (
     <div className="flex flex-col h-[80vh] bg-white rounded-xl shadow-md text-black">
+      {/* Area Chat */}
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
         {messages.map((msg, i) => (
           <div
@@ -27,10 +32,11 @@ export default function AdminChatPage() {
             className={`flex ${msg.sender === "admin" ? "justify-end" : "justify-start"}`}
           >
             <div
-              className={`px-4 py-2 rounded-lg max-w-[70%] ${msg.sender === "admin"
-                ? "bg-blue-600 text-white"
-                : "bg-gray-200 text-gray-800"
-                }`}
+              className={`px-4 py-2 rounded-lg max-w-[70%] ${
+                msg.sender === "admin"
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-200 text-gray-800"
+              }`}
             >
               {msg.text}
             </div>
@@ -38,14 +44,18 @@ export default function AdminChatPage() {
         ))}
       </div>
 
-      {/* Ganti Form jadi Div agar tidak perlu e.preventDefault() */}
+      {/* Input Area menggunakan <div> (Bukan <form>) 
+          Agar kita tidak perlu memakai e.preventDefault() */}
       <div className="border-t flex items-center px-4 py-3 bg-gray-50">
         <input
           type="text"
           value={input}
           onChange={(event) => setInput(event.target.value)}
           onKeyDown={(event) => {
-            if (event.key === "Enter") handleSend();
+            // Tetap bisa kirim pesan pakai Enter
+            if (event.key === "Enter") {
+              handleSend();
+            }
           }}
           placeholder="Type message..."
           className="flex-1 px-3 py-2 border rounded-lg outline-none bg-white text-black"
@@ -53,7 +63,7 @@ export default function AdminChatPage() {
         <button
           type="button"
           onClick={handleSend}
-          className="ml-2 bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-lg"
+          className="ml-2 bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-lg flex items-center justify-center"
         >
           <Send size={18} />
         </button>
