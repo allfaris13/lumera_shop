@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, ChangeEvent, FormEvent } from "react";
 import { Send } from "lucide-react";
 
 export default function AdminChatPage() {
@@ -10,12 +10,18 @@ export default function AdminChatPage() {
   ]);
   const [input, setInput] = useState("");
 
- const handleSend = (e: React.FormEvent) => {
-  e.preventDefault();
-  if (!input.trim()) return;
-  setMessages([...messages, { sender: "admin", text: input }]);
-  setInput(""); // Tambahkan ini juga biar input otomatis kosong setelah kirim
-};
+  // Menggunakan FormEvent secara eksplisit
+  const handleSend = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!input.trim()) return;
+    setMessages((prev) => [...prev, { sender: "admin", text: input }]);
+    setInput(""); 
+  };
+
+  // Memisahkan fungsi handleInputChange agar tipe datanya jelas
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value);
+  };
 
   return (
     <div className="flex flex-col h-[80vh] bg-white rounded-xl shadow-md">
@@ -45,9 +51,9 @@ export default function AdminChatPage() {
         <input
           type="text"
           value={input}
-          onChange={(e) => setInput(e.target.value)}
+          onChange={handleInputChange} // Menggunakan fungsi yang sudah diberi tipe data
           placeholder="Type message..."
-          className="flex-1 px-3 py-2 border rounded-lg outline-none"
+          className="flex-1 px-3 py-2 border rounded-lg outline-none text-black"
         />
         <button
           type="submit"
