@@ -10,12 +10,12 @@ export default function AdminChatPage() {
   ]);
   const [input, setInput] = useState("");
 
-  // Tambahkan React.FormEvent agar TypeScript tenang
-  const handleSend = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!input.trim()) return;
-    // ... sisa kode kamu
-  };
+ const handleSend = (e: React.FormEvent) => {
+  e.preventDefault();
+  if (!input.trim()) return;
+  setMessages([...messages, { sender: "admin", text: input }]);
+  setInput(""); // Tambahkan ini juga biar input otomatis kosong setelah kirim
+};
 
   return (
     <div className="flex flex-col h-[80vh] bg-white rounded-xl shadow-md">
