@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Truck, QrCode, Loader2, Download } from "lucide-react";
 import { API_URL } from "@/lib/api";
@@ -26,7 +26,7 @@ interface PaymentCardProps {
   subtitle: string;
 }
 
-export default function PaymentPage() {
+function PaymentContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -579,8 +579,8 @@ function PaymentOption({
     <div
       onClick={onClick}
       className={`flex justify-between items-center px-4 py-3 rounded-2xl shadow-sm transition-all cursor-pointer ${selected
-          ? "bg-[#2b1d1a] border-2 border-[#2b1d1a] text-white"
-          : "bg-gray-100 border-2 border-transparent text-gray-800"
+        ? "bg-[#2b1d1a] border-2 border-[#2b1d1a] text-white"
+        : "bg-gray-100 border-2 border-transparent text-gray-800"
         }`}
     >
       <div className="flex items-center gap-3">
@@ -610,8 +610,8 @@ function PaymentOption({
       </div>
       <div
         className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selected
-            ? "border-white bg-[#7B4540]"
-            : "border-gray-400 bg-transparent"
+          ? "border-white bg-[#7B4540]"
+          : "border-gray-400 bg-transparent"
           }`}
       >
         {selected && <div className="w-2.5 h-2.5 bg-white rounded-full" />}

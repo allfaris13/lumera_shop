@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Pencil, Trash2, Eye } from "lucide-react";
 import ConfirmDialog from "./ConfirmDialog";
 
-export default function RestaurantTable({ restaurants }) {
+export default function RestaurantTable({ restaurants }: { restaurants: any[] }) {
   if (!restaurants || restaurants.length === 0)
     return <p className="text-gray-500">No restaurants found.</p>;
 

@@ -10,11 +10,11 @@ export default function AdminChatPage() {
   ]);
   const [input, setInput] = useState("");
 
+  // Tambahkan React.FormEvent agar TypeScript tenang
   const handleSend = (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim()) return;
-    setMessages([...messages, { sender: "admin", text: input }]);
-    setInput("");
+    // ... sisa kode kamu
   };
 
   return (

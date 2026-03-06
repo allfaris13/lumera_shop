@@ -3,9 +3,13 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 
-export default function RestaurantDetailPage() {
+interface RestaurantFormProps {
+  mode?: string;
+}
+
+export default function RestaurantDetailPage({ mode }: RestaurantFormProps) {
   const { id } = useParams();
-  const [restaurant, setRestaurant] = useState(null);
+  const [restaurant, setRestaurant] = useState<any>(null);
 
   useEffect(() => {
     fetch(`https://restaurant-api.dicoding.dev/detail/${id}`)

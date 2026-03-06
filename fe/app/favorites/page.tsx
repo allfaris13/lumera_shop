@@ -1,10 +1,10 @@
- "use client";
+"use client";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import BottomNav from "@/components/BottomNav";
 
 export default function FavoritePage() {
-  const [favorites, setFavorites] = useState([]);
+  const [favorites, setFavorites] = useState<any[]>([]);
 
   useEffect(() => {
     const savedFav = localStorage.getItem("favorites");
@@ -13,8 +13,8 @@ export default function FavoritePage() {
     }
   }, []);
 
-  const removeFavorite = (id) => {
-    const updated = favorites.filter((item) => item.id !== id);
+  const removeFavorite = (id: number) => {
+    const updated = favorites.filter((item: any) => item.id !== id);
     setFavorites(updated);
     localStorage.setItem("favorites", JSON.stringify(updated));
   };

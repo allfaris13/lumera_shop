@@ -2,7 +2,7 @@
 
 import { Trash2 } from "lucide-react";
 
-export default function ConfirmDialog({ id }) {
+export default function ConfirmDialog({ id }: { id: string | number }) {
   const handleDelete = () => {
     if (confirm(`Are you sure to delete restaurant ID: ${id}?`)) {
       alert("This API is read-only, delete disabled.");
