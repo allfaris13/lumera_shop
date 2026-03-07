@@ -1,0 +1,9 @@
+{
+  "$schema": "https://railway.app/proposals/v1.json",
+  "build": {
+    "builder": "NIXPACKS"
+  },
+  "deploy": {
+    "startCommand": "npm run start"
+  }
+}
