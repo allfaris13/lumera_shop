@@ -2,11 +2,9 @@
   "$schema": "https://railway.app/proposals/v1.json",
   "build": {
     "builder": "NIXPACKS",
-    "watchPatterns": ["fe/**"],
     "root": "fe"
   },
   "deploy": {
-    "startCommand": "npm run start",
-    "healthCheckPath": "/"
+    "startCommand": "npm run start"
   }
 }
