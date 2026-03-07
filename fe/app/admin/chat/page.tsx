@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, KeyboardEvent, ChangeEvent } from "react";
 import { Send } from "lucide-react";
 
 export default function AdminChatPage() {
@@ -10,11 +10,23 @@ export default function AdminChatPage() {
   ]);
   const [input, setInput] = useState("");
 
-  // KUNCI UTAMA: Tidak ada parameter (e) di sini
+  // Fungsi tanpa parameter 'e' agar lolos build
   const handleSend = () => {
     if (!input.trim()) return;
     setMessages((prev) => [...prev, { sender: "admin", text: input }]);
     setInput("");
+  };
+
+  // Menangani input text secara eksplisit
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setInput(event.target.value);
+  };
+
+  // Menangani tekan tombol Enter
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      handleSend();
+    }
   };
 
   return (
@@ -26,10 +38,11 @@ export default function AdminChatPage() {
             className={`flex ${msg.sender === "admin" ? "justify-end" : "justify-start"}`}
           >
             <div
-              className={`px-4 py-2 rounded-lg max-w-[70%] ${msg.sender === "admin"
-                ? "bg-blue-600 text-white"
-                : "bg-gray-200 text-gray-800"
-                }`}
+              className={`px-4 py-2 rounded-lg max-w-[70%] ${
+                msg.sender === "admin"
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-200 text-gray-800"
+              }`}
             >
               {msg.text}
             </div>
@@ -37,15 +50,12 @@ export default function AdminChatPage() {
         ))}
       </div>
 
-      {/* PAKAI <div> BUKAN <form> AGAR TIDAK BUTUH e.preventDefault() */}
       <div className="border-t flex items-center px-4 py-3 bg-gray-50">
         <input
           type="text"
           value={input}
-          onChange={(event) => setInput(event.target.value)}
-          onKeyDown={(event) => {
-            if (event.key === "Enter") handleSend();
-          }}
+          onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
           placeholder="Type message..."
           className="flex-1 px-3 py-2 border rounded-lg outline-none bg-white text-black"
         />
