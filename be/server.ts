@@ -112,12 +112,11 @@ cron.schedule('* * * * *', async () => {
 
 // --- Server Startup ---
 
-const server = app.listen(PORT as number, '0.0.0.0', async () => {
+app.listen(PORT, '0.0.0.0', async () => {
     try {
         await prisma.$connect();
-        const address = server.address() as any;
         console.log('✅ Database connected successfully!');
-        console.log(`🚀 Server is running on http://127.0.0.1:${address.port} (bound to 0.0.0.0)`);
+        console.log(`🚀 Server is running on port ${PORT} (bound to 0.0.0.0)`);
         console.log('⏰ Cron job for order expiration started');
     } catch (error) {
         console.error('❌ Failed to connect to database or start server:', error);
