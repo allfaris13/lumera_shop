@@ -6,7 +6,7 @@
         "node": ">=20"
     },
     "scripts": {
-        "build": "cd be && npm install && npm run build && cd ../fe && npm install && npm run build",
+        "build": "cd be && npm install && npm run build && npx prisma migrate deploy && cd ../fe && npm install && npm run build",
         "start": "concurrently \"cd be && PORT=5000 npm start\" \"cd fe && npm start\""
     },
     "dependencies": {
