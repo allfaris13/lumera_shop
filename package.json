@@ -7,7 +7,7 @@
     },
     "scripts": {
         "build": "cd be && npm install && npm run build && cd ../fe && npm install && npm run build",
-        "start": "concurrently \"cd be && cross-env PORT=5000 npm start\" \"cd fe && npm start\""
+        "start": "concurrently -n \"BE,FE\" -c \"magenta,cyan\" --kill-others -p \"[{name}]\" \"cd be && cross-env PORT=5000 npm start\" \"cd fe && npm start\""
     },
     "dependencies": {
         "concurrently": "^9.2.1",
