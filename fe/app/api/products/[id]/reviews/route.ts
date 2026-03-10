@@ -4,7 +4,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
   const { id } = await params;
 
   try {
-    const backendBase = 'http://localhost:5000';
+    const backendBase = 'http://127.0.0.1:5000';
     const response = await fetch(`${backendBase}/api/products/${id}/reviews`, {
       headers: { 'Content-Type': 'application/json' },
     });

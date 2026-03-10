@@ -6,7 +6,7 @@ export async function GET(
 ) {
     try {
         const { id } = await params;
-        const backendBase = 'http://localhost:5000';
+        const backendBase = 'http://127.0.0.1:5000';
         const response = await fetch(`${backendBase}/api/products/${id}`);
         const data = await response.json();
         return NextResponse.json(data, { status: response.status });
@@ -22,7 +22,7 @@ export async function PUT(
     try {
         const { id } = await params;
         const body = await request.json();
-        const backendBase = 'http://localhost:5000';
+        const backendBase = 'http://127.0.0.1:5000';
         const response = await fetch(`${backendBase}/api/products/${id}`, {
             method: 'PUT',
             headers: {
@@ -44,7 +44,7 @@ export async function DELETE(
 ) {
     try {
         const { id } = await params;
-        const backendBase = 'http://localhost:5000';
+        const backendBase = 'http://127.0.0.1:5000';
         const response = await fetch(`${backendBase}/api/products/${id}`, {
             method: 'DELETE',
             headers: {

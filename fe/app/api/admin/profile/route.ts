@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Resolve backend base URL (fallback to localhost in dev if env not set)
-    const backendBase = 'http://localhost:5000';
+    const backendBase = 'http://127.0.0.1:5000';
 
     const forwardUrl = new URL('/api/admin/profile', backendBase).toString();
 
@@ -80,7 +80,7 @@ export async function PUT(request: NextRequest) {
     // Get request body
     const body = await request.json();
 
-    const backendBase = 'http://localhost:5000';
+    const backendBase = 'http://127.0.0.1:5000';
     const forwardUrl = new URL('/api/admin/profile', backendBase).toString();
 
     // Forward request to backend

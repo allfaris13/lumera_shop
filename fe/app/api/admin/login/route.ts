@@ -4,7 +4,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    const backendBase = 'http://localhost:5000';
+    const backendBase = 'http://127.0.0.1:5000';
     const forwardUrl = new URL('/api/admin/login', backendBase).toString();
 
     const resp = await fetch(forwardUrl, {

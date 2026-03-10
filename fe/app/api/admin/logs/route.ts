@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
     
     // Forward request to backend
     const response = await fetch(
-      `${'http://localhost:5000'}/api/admin/logs?${searchParams.toString()}`,
+      `${'http://127.0.0.1:5000'}/api/admin/logs?${searchParams.toString()}`,
       {
         headers: {
           Authorization: `Bearer ${adminToken}`,

@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Forward the request to the backend
-    const backendBase = 'http://localhost:5000';
+    const backendBase = 'http://127.0.0.1:5000';
     const response = await fetch(`${backendBase}/api/orders/admin`, {
       headers: {
         'Authorization': authHeader,
