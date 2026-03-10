@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@prisma/client": "^7.4.2",
     "autoprefixer": "^10.4.21",
     "formidable": "^3.5.4",
     "framer-motion": "^12.23.24",
@@ -26,6 +27,7 @@
     "baseline-browser-mapping": "^2.10.0",
     "eslint": "^9",
     "eslint-config-next": "^16.1.6",
+    "prisma": "^7.4.2",
     "react-is": "^19.2.4",
     "tailwindcss": "^4.1.16",
     "typescript": "^5"

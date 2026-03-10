@@ -1,20 +1,24 @@
 import { NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
 
 export async function GET() {
     try {
-        const backendBase = 'http://127.0.0.1:5000';
-        const response = await fetch(`${backendBase}/api/products`);
-
-        if (!response.ok) {
-            throw new Error(`Backend responded with status: ${response.status}`);
-        }
-
-        const products = await response.json();
+        const products = await prisma.product.findMany({
+            where: { isAvailable: true },
+            select: {
+                id: true,
+                name: true,
+                description: true,
+                price: true,
+                stock: true,
+                imageUrl: true,
+            },
+        });
         return NextResponse.json(products);
     } catch (error: any) {
-        console.error('Error proxying products GET:', error);
+        console.error('Error fetching products from DB:', error);
         return NextResponse.json(
-            { message: 'Gagal mengambil data produk dari server', error: error.message },
+            { message: 'Gagal mengambil data produk dari database', error: error.message },
             { status: 500 }
         );
     }

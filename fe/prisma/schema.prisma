@@ -1,0 +1,151 @@
+// File: be/prisma/schema.prisma
+
+// --- Datasource & Generator ---
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// ----------------------------------------------------
+// MODEL UNTUK LUMERA SHOP
+// ----------------------------------------------------
+
+// Model 1: Admin
+model Admin {
+  id                Int               @id @default(autoincrement())
+  email             String            @unique // Digunakan untuk login
+  password          String            // Harus disimpan dalam bentuk hash (bcrypt)
+  name              String
+  role              String            @default("Editor") // Misalnya: "SuperAdmin", "Editor"
+  profileImageUrl   String?           // URL foto profil admin
+  passwordChanges   Int               @default(0) // Jumlah perubahan password
+  lastPasswordChange DateTime?        // Waktu terakhir ganti password
+  averageActiveTime Float             @default(0) // Rata-rata waktu aktif dalam jam
+  activeModules     Int               @default(0) // Jumlah modul aktif yang diakses
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  adminLogs         AdminLog[]        // Relasi ke log aktivitas
+}
+
+// Model untuk log aktivitas admin
+model AdminLog {
+  id          Int       @id @default(autoincrement())
+  adminId     Int
+  action      String    // Jenis aksi (login, logout, update_profile, dll)
+  module      String?   // Modul yang diakses
+  description String    // Deskripsi perubahan
+  ipAddress   String?   // IP address admin
+  userAgent   String?   // Browser/device info
+  createdAt   DateTime  @default(now())
+
+  // Relasi
+  admin       Admin     @relation(fields: [adminId], references: [id])
+}
+
+// Model 2: User (Pembeli)
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String   // Harus disimpan dalam bentuk hash (bcrypt)
+  name      String
+  phone     String
+  address   String?  // Alamat pengguna
+  image     String?  // URL foto profil
+  balance   Float    @default(0) // Saldo untuk simulasi pembayaran QRIS
+  orders    Order[]  // Relasi ke tabel Order
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Model 3: Product (Makanan Asin & Dessert)
+model Product {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  description String?
+  price       Float
+  // Stok harus diupdate saat order dibuat/dibatalkan
+  stock       Int       @default(0) 
+  isAvailable Boolean   @default(true) // Untuk mengontrol apakah produk tampil di FE
+  imageUrl    String?   // URL gambar produk
+  orderItems  OrderItem[]
+  ratings     Rating[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+// Model 4: Order (Keranjang Belanja)
+model Order {
+  id              Int         @id @default(autoincrement())
+  userId          Int
+  totalAmount     Float
+  orderDate       DateTime    @default(now())
+  // Waktu hangus (orderDate + 10 menit)
+  expirationTime  DateTime    
+  
+  // Pembayaran
+  paymentMethod   PaymentMethod // QRIS atau CASH
+  paymentStatus   PaymentStatus // PENDING, COMPLETED, CANCELED
+  transactionId   String?       // ID dari Payment Gateway (untuk QRIS)
+  
+  // Status Proses Order
+  orderStatus     OrderStatus   // PENDING, PROCESSED, DELIVERED, CANCELED
+
+  // Relasi
+  user          User          @relation(fields: [userId], references: [id])
+  items         OrderItem[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+// Model 5: OrderItem (Detail produk dalam order tertentu)
+model OrderItem {
+  id        Int      @id @default(autoincrement())
+  orderId   Int
+  productId Int
+  quantity  Int
+  subtotal  Float
+  
+  // Relasi
+  order     Order   @relation(fields: [orderId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+// Model untuk menyimpan rating produk
+model Rating {
+  id         Int      @id @default(autoincrement())
+  productId  Int
+  userId     Int?     // optional, guests may rate without user account
+  value      Int      // 1..5
+  comment    String?  // optional review text
+  createdAt  DateTime @default(now())
+
+  product    Product  @relation(fields: [productId], references: [id])
+  // no relation to User enforced here (optional)
+}
+
+// ----------------------------------------------------
+// ENUM (TIPE DATA KHUSUS)
+// ----------------------------------------------------
+
+enum PaymentMethod {
+  QRIS
+  CASH
+}
+
+enum PaymentStatus {
+  PENDING   // Belum dibayar / Menunggu konfirmasi admin (CASH)
+  COMPLETED // Pembayaran sukses (Otomatis QRIS / Konfirmasi Admin CASH)
+  CANCELED  // Hangus 10 menit
+}
+
+enum OrderStatus {
+  PENDING     // Order diterima, menunggu pembayaran
+  PROCESSED   // Pembayaran sukses, sedang disiapkan
+  DELIVERED   // Sudah dikirim/diambil
+  CANCELED
+}
