@@ -1,0 +1,16 @@
+{
+    "name": "lumera-shop",
+    "version": "1.0.0",
+    "private": true,
+    "engines": {
+        "node": ">=20"
+    },
+    "scripts": {
+        "build": "cd be && npm install && npm run build && cd ../fe && npm install && npm run build",
+        "start": "concurrently \"cd be && cross-env PORT=5000 npm start\" \"cd fe && npm start\""
+    },
+    "dependencies": {
+        "concurrently": "^9.2.1",
+        "cross-env": "^10.1.0"
+    }
+}
