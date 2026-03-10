@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized - No token provided' }, { status: 401 });
     }
 
-    const backendBase = process.env.NEXT_PUBLIC_API_URL || process.env.API_URL || 'http://localhost:500';
+    const backendBase = 'http://localhost:5000';
     const forwardUrl = new URL('/api/admin/stats', backendBase).toString();
 
     const resp = await fetch(forwardUrl, {

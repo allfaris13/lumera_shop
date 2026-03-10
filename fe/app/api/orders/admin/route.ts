@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Forward the request to the backend
-    const backendBase = process.env.NEXT_PUBLIC_API_URL || process.env.API_URL || 'http://localhost:500';
+    const backendBase = 'http://localhost:5000';
     const response = await fetch(`${backendBase}/api/orders/admin`, {
       headers: {
         'Authorization': authHeader,

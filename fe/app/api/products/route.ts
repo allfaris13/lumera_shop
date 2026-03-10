@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 export async function GET() {
     try {
-        const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:500';
+        const backendBase = 'http://localhost:5000';
         const response = await fetch(`${backendBase}/api/products`);
 
         if (!response.ok) {
@@ -23,7 +23,7 @@ export async function GET() {
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:500';
+        const backendBase = 'http://localhost:5000';
 
         const response = await fetch(`${backendBase}/api/products`, {
             method: 'POST',

@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
 
     // Forward request to backend
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/orders/${orderId}/cancel`,
+      `${'http://localhost:5000'}/api/orders/${orderId}/cancel`,
       {
         method: 'POST',
         headers: {

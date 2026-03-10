@@ -15,7 +15,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     const { id } = await params;
 
     // Forward the request to the backend
-    const backendBase = process.env.NEXT_PUBLIC_API_URL || process.env.API_URL || 'http://localhost:500';
+    const backendBase = 'http://localhost:5000';
     const response = await fetch(`${backendBase}/api/orders/${id}/payment`, {
       method: 'PUT',
       headers: {
