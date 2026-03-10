@@ -33,10 +33,7 @@ export async function GET(request: NextRequest) {
 
     // Resolve backend base URL (fallback to localhost in dev if env not set)
     const backendBase = 'http://localhost:5000';
-    if (!'http://localhost:5000' && !process.env.API_URL) {
-      // Helpful dev log so it's obvious we're falling back to localhost
-      console.warn('NEXT_PUBLIC_API_URL / API_URL not set — forwarding admin profile requests to', backendBase);
-    }
+
     const forwardUrl = new URL('/api/admin/profile', backendBase).toString();
 
     // Forward request to backend
