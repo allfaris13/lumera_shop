@@ -18,12 +18,18 @@ const nextConfig = {
     unoptimized: true,
   },
   async rewrites() {
-    return [
-      {
-        source: '/uploads/:path*',
-        destination: `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:500'}/uploads/:path*`,
-      },
-    ];
+    return {
+      fallback: [
+        {
+          source: '/api/:path*',
+          destination: `http://localhost:5000/api/:path*`,
+        },
+        {
+          source: '/uploads/:path*',
+          destination: `http://localhost:5000/uploads/:path*`,
+        },
+      ]
+    };
   },
   // Turbopack configuration for Next.js 16
   turbopack: {
